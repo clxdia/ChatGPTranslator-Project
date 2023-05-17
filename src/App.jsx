@@ -10,39 +10,39 @@ import { HiOutlineSwitchHorizontal } from "react-icons/hi";
 
 import "../src/styles/index.scss";
 
-const languages = [
-  { language: "English", code: "en-en" },
+const idioms = [
+  { idiom: "English", code: "en-en" },
   {
-    language: "Spanish",
+    idiom: "Spanish",
     code: "es-en",
   },
   {
-    language: "French",
+    idiom: "French",
     code: "fr-en",
   },
   {
-    language: "Chinese (Simplified)",
+    idiom: "Chinese (Simplified)",
     code: "zh-en",
   },
 
   {
-    language: "German",
+    idiom: "German",
     code: "de-en",
   },
   {
-    language: "Japanese",
+    idiom: "Japanese",
     code: "jp-en",
   },
   {
-    language: "Korean",
+    idiom: "Korean",
     code: "kr-en",
   },
   {
-    language: "Arabic",
+    idiom: "Arabic",
     code: "ar-en",
   },
   {
-    language: "Greek",
+    idiom: "Greek",
     code: "el-en",
   },
 ];
@@ -55,22 +55,22 @@ function App() {
 
   const [response, setResponse] = useState("");
   const [text, setText] = useState("");
-  const [language, setLanguage] = useState("English");
+  const [language, setLanguage] = useState("");
   const [definition, setDefinition] = useState("");
   const [dropdown, openDropdown] = useState("");
-  const [translateClicked, setTranslateClicked] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const [selectedLanguage, setSelectedLanguage] = useState(languages[0]);
+  const [selectedLanguage, setSelectedLanguage] = useState(idioms[0]);
 
   async function handleSubmit(event) {
     event.preventDefault();
 
     // setText(event.target.text.value);
     // setLanguage(selectedLanguage.code);
-    setLanguage(event.target.language.value);
-    setTranslateClicked(true);
-
-    const prompt = `Translate this italian text "${text}" to ${selectedLanguage}`;
+    // setLanguage(event.target.language.value);
+    // setLanguage(selectedLanguage.idiom);
+    setLoading(true);
+    const prompt = `Translate this italian text "${text}" to ${selectedLanguage.idiom}`;
 
     const response = await openai.createCompletion({
       model: "text-davinci-003",
@@ -82,23 +82,24 @@ function App() {
       presence_penalty: 0,
     });
     setResponse(response.data.choices[0].text.replace(/\n/g, ""));
+    setLoading(false);
     console.log(response.data.choices);
 
-    fetch(
-      `https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=${
-        import.meta.env.VITE_YANDEX_API
-      }&lang=${language}&text=${response.data.choices[0].text}`
-    )
-      .then((res) => {
-        if (!res.ok) {
-          throw Error("error");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        setDefinition(data?.def[0]);
-        console.log(data?.def[0]);
-      });
+    // fetch(
+    //   `https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=${
+    //     import.meta.env.VITE_YANDEX_API
+    //   }&lang=${language}&text=${response.data.choices[0].text}`
+    // )
+    //   .then((res) => {
+    //     if (!res.ok) {
+    //       throw Error("error");
+    //     }
+    //     return res.json();
+    //   })
+    //   .then((data) => {
+    //     setDefinition(data?.def[0]);
+    //     console.log(data?.def[0]);
+    //   });
   }
 
   return (
@@ -106,14 +107,14 @@ function App() {
       {dropdown && (
         <section className="content__languages">
           <ul>
-            {languages &&
-              languages.map((language) => (
-                <li key={language.code}>
+            {idioms &&
+              idioms.map((idiom) => (
+                <li key={idiom.code}>
                   <button
-                    onClick={() => setSelectedLanguage(language)}
-                    value={language.language}
+                    onClick={() => setSelectedLanguage(idiom)}
+                    value={idiom.idiom}
                   >
-                    {language.language}
+                    {idiom.idiom}
                   </button>
                 </li>
               ))}
@@ -140,7 +141,7 @@ function App() {
           </button>
 
           <div className="output">
-            {languages && (
+            {idioms && (
               <button
                 className="language__selector"
                 onClick={() => openDropdown(!dropdown)}
@@ -149,7 +150,7 @@ function App() {
                 type="button"
                 onChange={(event) => setLanguage(event.target.value)}
               >
-                {selectedLanguage.language}{" "}
+                {selectedLanguage.idiom}{" "}
                 {dropdown ? (
                   <MdKeyboardArrowUp size={20} />
                 ) : (
@@ -158,21 +159,21 @@ function App() {
               </button>
             )}
 
-            <textarea value={translateClicked ? response : ""}></textarea>
+            <textarea value={loading ? "Loading..." : response}></textarea>
             <div className="output__icons">
               <MdOutlineContentCopy />
             </div>
           </div>
         </form>
       </section>
-      <section className="content__below">
+      {/* <section className="content__below">
         <div className="content__below__definitions">
           {definition && <p>{definition?.text}</p>}
         </div>
         <div className="content__below__synonyms">
           <p>Definitions</p>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 }
