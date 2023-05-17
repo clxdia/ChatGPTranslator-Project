@@ -1,0 +1,43 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
+
+$montserrat: "Montserrat", sans-serif;
+
+$blue: #0d3b66;
+$whiteish: #faf0ca;
+$yellow: #f4d35e;
+$orange: #ee964b;
+$dark-orange: #f95738;
+
+input,
+select,
+button {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  text-align: inherit;
+  text-decoration: none;
+  cursor: inherit;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+textarea {
+  border: 1px solid #ccc;
+  font: inherit;
+  margin: 0;
+  padding: 1px 2px;
+  resize: vertical;
+  appearance: none;
+  outline: none;
+}
