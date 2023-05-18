@@ -104,7 +104,7 @@ function App() {
 
     fetch(URL, {
       headers: {
-        "X-RapidAPI-Key": "b16779b3b4mshf4ae0e3c28e884cp1c85c8jsnd50aa5d4c2ec",
+        "X-RapidAPI-Key": import.meta.env.VITE_LEXICALA_API,
         "X-RapidAPI-Host": "lexicala1.p.rapidapi.com",
       },
     })
