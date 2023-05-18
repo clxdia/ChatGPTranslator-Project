@@ -96,7 +96,6 @@ function App() {
       })
       .then((data) => {
         setSynonyms(data?.def[0]);
-        console.log(data?.def[0]);
       });
 
     const URL = `https://lexicala1.p.rapidapi.com/search-entries?text=${response.data.choices[0].text.toLowerCase()}&page=1&language=${
@@ -116,9 +115,7 @@ function App() {
         return res.json();
       })
       .then((data) => {
-        console.log(data.results[0]);
         setDefinitions(data.results[0]);
-        console.log(URL);
       });
   }
 
@@ -197,7 +194,9 @@ function App() {
               </button>
             )}
 
-            <textarea value={loading ? "Loading..." : response}></textarea>
+            <textarea
+              defaultValue={loading ? "Loading..." : response}
+            ></textarea>
             <div className="output__icons">
               <MdOutlineContentCopy onClick={copyRes} />
             </div>
@@ -215,8 +214,8 @@ function App() {
               <i>{synonyms?.pos}</i>
               <ul>
                 {synonyms?.tr.map((text) => (
-                  <li key={text.text}>
-                    <b>{text.text}</b> <i>{text.pos}</i>
+                  <li key={text?.text}>
+                    <b>{text?.text}</b> <i>{text?.pos}</i>
                   </li>
                 ))}
               </ul>
@@ -234,7 +233,7 @@ function App() {
             <i>{definitions?.headword?.pronunciation?.value}</i>
             <ul>
               {definitions?.headword?.alternative_scripts?.map((text) => (
-                <li>
+                <li key={text?.text}>
                   {text?.text} <span>{text?.type}</span>
                 </li>
               ))}
@@ -242,10 +241,10 @@ function App() {
             <ul>
               {definitions?.senses.map((text) => (
                 <>
-                  <li>{text?.definition}</li>
+                  <li key={text?.id}>{text?.definition}</li>
                   <ul>
                     {text?.examples?.map((text) => (
-                      <li>{text.text}</li>
+                      <li key={text?.text}>{text?.text}</li>
                     ))}
                   </ul>
                 </>
