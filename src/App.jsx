@@ -1,49 +1,50 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Configuration, OpenAIApi } from "openai";
 import {
   MdKeyboardArrowDown,
   MdKeyboardArrowUp,
-  MdLanguage,
   MdOutlineContentCopy,
+  MdOutlineContentPaste,
 } from "react-icons/md";
 import { HiOutlineSwitchHorizontal } from "react-icons/hi";
+import { RiDeleteBin5Line } from "react-icons/ri";
 
 import "../src/styles/index.scss";
 
 const idioms = [
-  { idiom: "English", code: "en-en" },
+  { idiom: "Italian", code: "it" },
   {
     idiom: "Spanish",
-    code: "es-en",
+    code: "es",
   },
   {
     idiom: "French",
-    code: "fr-en",
+    code: "fr",
   },
   {
     idiom: "Chinese (Simplified)",
-    code: "zh-en",
+    code: "zh",
   },
 
   {
     idiom: "German",
-    code: "de-en",
+    code: "de",
   },
   {
     idiom: "Japanese",
-    code: "jp-en",
+    code: "ja",
   },
   {
     idiom: "Korean",
-    code: "kr-en",
+    code: "ko",
   },
   {
     idiom: "Arabic",
-    code: "ar-en",
+    code: "ar",
   },
   {
     idiom: "Greek",
-    code: "el-en",
+    code: "el",
   },
 ];
 
@@ -56,21 +57,19 @@ function App() {
   const [response, setResponse] = useState("");
   const [text, setText] = useState("");
   const [language, setLanguage] = useState("");
-  const [definition, setDefinition] = useState("");
+  const [definitions, setDefinitions] = useState("");
+  const [synonyms, setSynonyms] = useState("");
   const [dropdown, openDropdown] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const textareaRef = useRef(null);
 
   const [selectedLanguage, setSelectedLanguage] = useState(idioms[0]);
 
   async function handleSubmit(event) {
     event.preventDefault();
-
-    // setText(event.target.text.value);
-    // setLanguage(selectedLanguage.code);
-    // setLanguage(event.target.language.value);
-    // setLanguage(selectedLanguage.idiom);
     setLoading(true);
-    const prompt = `Translate this italian text "${text}" to ${selectedLanguage.idiom}`;
+    const prompt = `Translate this english text "${text}" to ${selectedLanguage.idiom}`;
 
     const response = await openai.createCompletion({
       model: "text-davinci-003",
@@ -81,26 +80,63 @@ function App() {
       frequency_penalty: 0,
       presence_penalty: 0,
     });
-    setResponse(response.data.choices[0].text.replace(/\n/g, ""));
+    setResponse(response.data.choices[0].text.replace(/\n|"/g, ""));
     setLoading(false);
-    console.log(response.data.choices);
 
-    // fetch(
-    //   `https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=${
-    //     import.meta.env.VITE_YANDEX_API
-    //   }&lang=${language}&text=${response.data.choices[0].text}`
-    // )
-    //   .then((res) => {
-    //     if (!res.ok) {
-    //       throw Error("error");
-    //     }
-    //     return res.json();
-    //   })
-    //   .then((data) => {
-    //     setDefinition(data?.def[0]);
-    //     console.log(data?.def[0]);
-    //   });
+    fetch(
+      `https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=${
+        import.meta.env.VITE_YANDEX_API
+      }&lang=en-en&text=${text}`
+    )
+      .then((res) => {
+        if (!res.ok) {
+          throw Error("error");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setSynonyms(data?.def[0]);
+        console.log(data?.def[0]);
+      });
+
+    const URL = `https://lexicala1.p.rapidapi.com/search-entries?text=${response.data.choices[0].text.toLowerCase()}&page=1&language=${
+      selectedLanguage.code
+    }`;
+
+    fetch(URL, {
+      headers: {
+        "X-RapidAPI-Key": "b16779b3b4mshf4ae0e3c28e884cp1c85c8jsnd50aa5d4c2ec",
+        "X-RapidAPI-Host": "lexicala1.p.rapidapi.com",
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw Error("error");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data.results[0]);
+        setDefinitions(data.results[0]);
+        console.log(URL);
+      });
   }
+
+  const copyInput = () => {
+    navigator.clipboard.writeText(text);
+  };
+
+  const copyRes = () => {
+    navigator.clipboard.writeText(response);
+  };
+
+  const input = useRef(null);
+
+  const clearInput = () => {
+    if (input.current) {
+      input.current.value = "";
+    }
+  };
 
   return (
     <div className="homepage">
@@ -125,15 +161,17 @@ function App() {
       <section className="content__above">
         <form className="form">
           <div className="input">
-            <button type="button">Italiano</button>
+            <button type="button">English</button>
             <textarea
+              ref={input}
               value={text}
               name="text"
               onChange={(event) => setText(event.target.value)}
             ></textarea>
-            <text className="input__icons">
-              <MdOutlineContentCopy />
-            </text>
+            <div className="input__icons">
+              <MdOutlineContentCopy onClick={copyInput} />
+              <RiDeleteBin5Line onClick={clearInput} />
+            </div>
           </div>
 
           <button type="submit" onClick={handleSubmit}>
@@ -161,19 +199,61 @@ function App() {
 
             <textarea value={loading ? "Loading..." : response}></textarea>
             <div className="output__icons">
-              <MdOutlineContentCopy />
+              <MdOutlineContentCopy onClick={copyRes} />
             </div>
           </div>
         </form>
       </section>
-      {/* <section className="content__below">
+
+      <section className="content__below">
         <div className="content__below__definitions">
-          {definition && <p>{definition?.text}</p>}
+          {synonyms && (
+            <div>
+              <p>
+                Synonyms of <b>{synonyms?.text}</b>
+              </p>
+              <i>{synonyms?.pos}</i>
+              <ul>
+                {synonyms?.tr.map((text) => (
+                  <li key={text.text}>
+                    <b>{text.text}</b> <i>{text.pos}</i>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
-        <div className="content__below__synonyms">
-          <p>Definitions</p>
-        </div>
-      </section> */}
+
+        {definitions && (
+          <div className="content__below__synonyms">
+            <p>Definitions of {definitions?.headword?.text}</p>
+            <p>
+              <i>{definitions?.headword?.pos}</i>{" "}
+              {definitions?.headword?.gender}
+            </p>
+            <i>{definitions?.headword?.pronunciation?.value}</i>
+            <ul>
+              {definitions?.headword?.alternative_scripts?.map((text) => (
+                <li>
+                  {text?.text} <span>{text?.type}</span>
+                </li>
+              ))}
+            </ul>
+            <ul>
+              {definitions?.senses.map((text) => (
+                <>
+                  <li>{text?.definition}</li>
+                  <ul>
+                    {text?.examples?.map((text) => (
+                      <li>{text.text}</li>
+                    ))}
+                  </ul>
+                </>
+              ))}
+            </ul>
+          </div>
+        )}
+      </section>
     </div>
   );
 }
