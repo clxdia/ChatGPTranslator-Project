@@ -136,26 +136,28 @@ function App() {
 
   return (
     <div className="homepage">
-      <div className="blue__background"></div>
-      <section
-        className={dropdown ? "content__languages_open" : "content__languages"}
-      >
-        <ul>
-          {idioms &&
-            idioms.map((idiom) => (
-              <li key={idiom.code}>
-                <button
-                  onClick={() => setSelectedLanguage(idiom)}
-                  value={idiom.idiom}
-                >
-                  {idiom.idiom}
-                </button>
-              </li>
-            ))}
-        </ul>
-      </section>
-
       <section className="content__above">
+        <div className="blue__background"></div>
+        <section
+          className={
+            dropdown ? "content__languages_open" : "content__languages"
+          }
+        >
+          <ul>
+            {idioms &&
+              idioms.map((idiom) => (
+                <li key={idiom.code}>
+                  <button
+                    onClick={() => setSelectedLanguage(idiom)}
+                    value={idiom.idiom}
+                  >
+                    {idiom.idiom}
+                  </button>
+                </li>
+              ))}
+          </ul>
+        </section>
+
         <form className="form">
           <div className="input">
             <button type="button">English</button>

@@ -22,21 +22,20 @@ body {
   padding-top: 0px !important;
 }
 
-.blue__background {
-  position: absolute;
-  height: 650px;
-  top: 0px;
-  width: 100%;
-  z-index: -1;
-  background-image: url("/bg.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
 .content__above {
-  margin-top: 10px;
   position: relative;
+
+  .blue__background {
+    position: absolute;
+    height: 90%;
+    top: 0px;
+    width: 100%;
+    z-index: -3;
+    background-image: url("/bg.png");
+    background-size: cover;
+    background-position: top;
+    background-repeat: no-repeat;
+  }
 
   .form {
     padding-top: 50px;
