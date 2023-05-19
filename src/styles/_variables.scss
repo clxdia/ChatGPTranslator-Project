@@ -63,6 +63,7 @@ li {
 
 @mixin languages {
   width: calc(30vw * 2);
+  max-width: 1100px;
   padding-top: 50px;
   margin: auto;
   transition: height 0.3s ease-in-out, opacity 0.3s ease-in-out !important;

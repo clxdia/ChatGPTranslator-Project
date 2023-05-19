@@ -8,7 +8,6 @@ html {
 body {
   padding: 0px;
   margin: auto 0;
-  max-width: 2000px;
   box-sizing: border-box;
   width: 100%;
   font-family: $montserrat;
@@ -27,7 +26,7 @@ body {
 
   .blue__background {
     position: absolute;
-    height: 86%;
+    height: 88%;
     top: 0px;
     width: 100%;
     z-index: -3;
@@ -50,7 +49,7 @@ body {
 
   .input {
     textarea {
-      padding: 2vw;
+      padding: 35px;
     }
 
     &__icons {
@@ -60,7 +59,7 @@ body {
 
   .output {
     textarea {
-      padding: 2vw;
+      padding: 35px;
       caret-color: transparent;
     }
 
@@ -112,7 +111,7 @@ body {
     width: 30vw;
     height: 15vw;
     max-width: 530px;
-    max-height: 350px;
+    max-height: 300px;
     margin-top: 20px;
     resize: none;
     border-radius: 7px 7px 0px 0px;
@@ -143,7 +142,7 @@ body {
     width: fit-content;
     width: 70%;
     margin: auto;
-
+    max-width: 1100px;
     gap: 25px;
   }
 
