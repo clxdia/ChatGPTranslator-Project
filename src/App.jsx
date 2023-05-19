@@ -61,6 +61,7 @@ function App() {
   const [synonyms, setSynonyms] = useState("");
   const [dropdown, openDropdown] = useState("");
   const [loading, setLoading] = useState(false);
+  const [prevTrans, setPrevTrans] = useState("");
 
   const [selectedLanguage, setSelectedLanguage] = useState(idioms[0]);
 
@@ -78,7 +79,7 @@ function App() {
       frequency_penalty: 0,
       presence_penalty: 0,
     });
-    setResponse(response.data.choices[0].text.replace(/\n|"/g, ""));
+    setResponse(response.data.choices[0].text.replace(/\n|"|\.|!|\?/g, ""));
     setLoading(false);
 
     fetch(
