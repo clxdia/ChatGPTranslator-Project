@@ -2,11 +2,11 @@
 
 $montserrat: "Montserrat", sans-serif;
 
-$blue: #0d3b66;
-$whiteish: #faf0ca;
-$yellow: #f4d35e;
-$orange: #ee964b;
-$dark-orange: #f95738;
+$blue: #274c77;
+$grey: #f1f1f1;
+$bluegrey: #6096ba;
+$skyblue: #a3cef1;
+$dark-gray: #8b8c89;
 
 input,
 select,
@@ -40,4 +40,44 @@ textarea {
   resize: vertical;
   appearance: none;
   outline: none;
+}
+
+ul,
+li {
+  list-style-type: none;
+  padding-left: 0px !important;
+}
+
+@mixin textAreaIcons {
+  padding: 15px;
+  background-color: white;
+  border-top: solid 0px !important;
+  border: 1px solid #ccc;
+  border-radius: 0px 0px 7px 7px;
+  display: flex;
+  justify-content: end;
+  gap: 10px;
+  color: rgb(162, 162, 162);
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.16);
+}
+
+@mixin languages {
+  width: calc(30vw * 2);
+  padding-top: 50px;
+  margin: auto;
+  transition: height 0.3s ease-in-out, opacity 0.3s ease-in-out !important;
+  overflow: hidden;
+  background-color: transparent;
+
+  ul {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    background-color: transparent;
+    color: white;
+
+    li {
+      margin: 4px 0px 4px 0px;
+    }
+  }
 }

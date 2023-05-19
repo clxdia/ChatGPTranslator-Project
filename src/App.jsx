@@ -4,10 +4,10 @@ import {
   MdKeyboardArrowDown,
   MdKeyboardArrowUp,
   MdOutlineContentCopy,
-  MdOutlineContentPaste,
 } from "react-icons/md";
 import { HiOutlineSwitchHorizontal } from "react-icons/hi";
 import { RiDeleteBin5Line } from "react-icons/ri";
+import { BsArrowReturnRight } from "react-icons/bs";
 
 import "../src/styles/index.scss";
 
@@ -62,8 +62,6 @@ function App() {
   const [dropdown, openDropdown] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const textareaRef = useRef(null);
-
   const [selectedLanguage, setSelectedLanguage] = useState(idioms[0]);
 
   async function handleSubmit(event) {
@@ -98,16 +96,17 @@ function App() {
         setSynonyms(data?.def[0]);
       });
 
-    const URL = `https://lexicala1.p.rapidapi.com/search-entries?text=${response.data.choices[0].text.toLowerCase()}&page=1&language=${
-      selectedLanguage.code
-    }`;
-
-    fetch(URL, {
-      headers: {
-        "X-RapidAPI-Key": import.meta.env.VITE_LEXICALA_API,
-        "X-RapidAPI-Host": "lexicala1.p.rapidapi.com",
-      },
-    })
+    fetch(
+      `https://lexicala1.p.rapidapi.com/search-entries?text=${response.data.choices[0].text.toLowerCase()}&page=1&language=${
+        selectedLanguage.code
+      }`,
+      {
+        headers: {
+          "X-RapidAPI-Key": import.meta.env.VITE_LEXICALA_API,
+          "X-RapidAPI-Host": "lexicala1.p.rapidapi.com",
+        },
+      }
+    )
       .then((res) => {
         if (!res.ok) {
           throw Error("error");
@@ -137,23 +136,24 @@ function App() {
 
   return (
     <div className="homepage">
-      {dropdown && (
-        <section className="content__languages">
-          <ul>
-            {idioms &&
-              idioms.map((idiom) => (
-                <li key={idiom.code}>
-                  <button
-                    onClick={() => setSelectedLanguage(idiom)}
-                    value={idiom.idiom}
-                  >
-                    {idiom.idiom}
-                  </button>
-                </li>
-              ))}
-          </ul>
-        </section>
-      )}
+      <div className="blue__background"></div>
+      <section
+        className={dropdown ? "content__languages_open" : "content__languages"}
+      >
+        <ul>
+          {idioms &&
+            idioms.map((idiom) => (
+              <li key={idiom.code}>
+                <button
+                  onClick={() => setSelectedLanguage(idiom)}
+                  value={idiom.idiom}
+                >
+                  {idiom.idiom}
+                </button>
+              </li>
+            ))}
+        </ul>
+      </section>
 
       <section className="content__above">
         <form className="form">
@@ -166,8 +166,8 @@ function App() {
               onChange={(event) => setText(event.target.value)}
             ></textarea>
             <div className="input__icons">
-              <MdOutlineContentCopy onClick={copyInput} />
-              <RiDeleteBin5Line onClick={clearInput} />
+              <RiDeleteBin5Line onClick={clearInput} size={19} />
+              <MdOutlineContentCopy onClick={copyInput} size={19} />
             </div>
           </div>
 
@@ -198,60 +198,81 @@ function App() {
               defaultValue={loading ? "Loading..." : response}
             ></textarea>
             <div className="output__icons">
-              <MdOutlineContentCopy onClick={copyRes} />
+              <MdOutlineContentCopy onClick={copyRes} size={19} />
             </div>
           </div>
         </form>
       </section>
 
       <section className="content__below">
-        <div className="content__below__definitions">
+        <div className="grey__background"></div>
+        <div className="content__below__container">
           {synonyms && (
-            <div>
+            <div className="content__below__synonyms">
               <p>
                 Synonyms of <b>{synonyms?.text}</b>
               </p>
               <i>{synonyms?.pos}</i>
               <ul>
                 {synonyms?.tr.map((text) => (
-                  <li key={text?.text}>
-                    <b>{text?.text}</b> <i>{text?.pos}</i>
+                  <li
+                    key={text?.text}
+                    className="content__below__synonyms__list"
+                  >
+                    <b>{text?.text}</b>
+                    <span> </span> <i>{text?.pos}</i>
                   </li>
                 ))}
               </ul>
             </div>
           )}
-        </div>
 
-        {definitions && (
-          <div className="content__below__synonyms">
-            <p>Definitions of {definitions?.headword?.text}</p>
-            <p>
-              <i>{definitions?.headword?.pos}</i>{" "}
-              {definitions?.headword?.gender}
-            </p>
-            <i>{definitions?.headword?.pronunciation?.value}</i>
-            <ul>
-              {definitions?.headword?.alternative_scripts?.map((text) => (
-                <li key={text?.text}>
-                  {text?.text} <span>{text?.type}</span>
-                </li>
-              ))}
-            </ul>
-            <ul>
+          {definitions && (
+            <div className="content__below__definitions">
+              <p>
+                Definitions of <b>{definitions?.headword?.text}</b>{" "}
+              </p>
+              <p>
+                <i>{definitions?.headword?.pronunciation?.value}</i>
+              </p>
+              <p>
+                <i>{definitions?.headword?.pos}</i>
+                {definitions?.headword?.gender ? (
+                  <i>• {definitions?.headword?.gender}</i>
+                ) : (
+                  <i></i>
+                )}
+              </p>
+
+              <ul>
+                {definitions?.headword?.alternative_scripts?.map((text) => (
+                  <li key={text?.text}>
+                    <p>
+                      {text?.text} <i>{text?.type}</i>
+                    </p>
+                  </li>
+                ))}
+              </ul>
               {definitions?.senses.map((text) => (
-                <>
-                  <li key={text?.id}>{text?.definition}</li>
+                <ul className="definitions">
+                  <li key={text?.id}>
+                    <p className="definitions__main">{text?.definition}</p>
+                  </li>
                   <ul>
                     {text?.examples?.map((text) => (
-                      <li key={text?.text}>{text?.text}</li>
+                      <li key={text?.text}>
+                        <p className="definitions__examples">
+                          <BsArrowReturnRight />
+                          {text?.text}
+                        </p>
+                      </li>
                     ))}
                   </ul>
-                </>
+                </ul>
               ))}
-            </ul>
-          </div>
-        )}
+            </div>
+          )}
+        </div>
       </section>
     </div>
   );
