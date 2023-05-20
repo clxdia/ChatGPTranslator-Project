@@ -8,6 +8,7 @@ import {
 import { HiOutlineSwitchHorizontal } from "react-icons/hi";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { BsArrowReturnRight } from "react-icons/bs";
+import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 
 import "../src/styles/index.scss";
 
@@ -61,15 +62,15 @@ function App() {
   const [synonyms, setSynonyms] = useState("");
   const [dropdown, openDropdown] = useState("");
   const [loading, setLoading] = useState(false);
-  const [prevTrans, setPrevTrans] = useState("");
-
+  const [history, setHistory] = useState(false);
+  const [translationHistory, setTranslationHistory] = useState([]);
   const [selectedLanguage, setSelectedLanguage] = useState(idioms[0]);
 
   async function handleSubmit(event) {
     event.preventDefault();
     setLoading(true);
     const prompt = `Translate this english text "${text}" to ${selectedLanguage.idiom}`;
-
+    setHistory(false);
     const response = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: prompt,
@@ -80,6 +81,15 @@ function App() {
       presence_penalty: 0,
     });
     setResponse(response.data.choices[0].text.replace(/\n|"|\.|!|\?/g, ""));
+
+    setHistory(true);
+    const translation = {
+      input: text,
+      output: response.data.choices[0].text.replace(/\n|"|\.|!|\?/g, ""),
+      language: selectedLanguage.idiom,
+    };
+    setTranslationHistory((prevHistory) => [...prevHistory, translation]);
+
     setLoading(false);
 
     fetch(
@@ -135,6 +145,24 @@ function App() {
     }
   };
 
+  const swiper = useRef(null);
+
+  const swipePrev = () => {
+    if (swiper.current) {
+      const currentScrollLeft = swiper.current.scrollLeft;
+      const slideWidth = swiper.current.offsetWidth / 3;
+      swiper.current.scrollLeft = currentScrollLeft - slideWidth;
+    }
+  };
+
+  const swipeNext = () => {
+    if (swiper.current) {
+      const currentScrollLeft = swiper.current.scrollLeft;
+      const slideWidth = swiper.current.offsetWidth / 3;
+      swiper.current.scrollLeft = currentScrollLeft + slideWidth;
+    }
+  };
+
   return (
     <div className="homepage">
       <section className="content__above">
@@ -161,7 +189,30 @@ function App() {
 
         <form className="form">
           <div className="input">
-            <button type="button">English</button>
+            <div className="input__mobile">
+              <button type="button">English</button>
+              {idioms && (
+                <button
+                  className="language__selector__mobile"
+                  onClick={() => openDropdown(!dropdown)}
+                  value={language}
+                  name="language"
+                  type="button"
+                  onChange={(event) => setLanguage(event.target.value)}
+                >
+                  {selectedLanguage.idiom}{" "}
+                  {dropdown ? (
+                    <MdKeyboardArrowUp size={20} />
+                  ) : (
+                    <MdKeyboardArrowDown size={20} />
+                  )}
+                </button>
+              )}
+            </div>
+            <button type="button" className="button__desktop">
+              English
+            </button>
+
             <textarea
               ref={input}
               value={text}
@@ -277,6 +328,36 @@ function App() {
           )}
         </div>
       </section>
+
+      {history ? (
+        <section className="content__history">
+          <div className="content__history__title">
+            <h2>Last translations</h2>
+            <div>
+              <IoIosArrowBack size={25} onClick={swipePrev} />
+              <IoIosArrowForward size={25} onClick={swipeNext} />
+            </div>
+          </div>
+
+          <div className="content__history__container" ref={swiper}>
+            {translationHistory
+              .slice(0)
+              .reverse()
+              .map((translation, index) => (
+                <div key={index} className="history">
+                  <p>{translation.input}</p>
+                  <p>{translation.output}</p>
+                </div>
+              ))}
+          </div>
+        </section>
+      ) : (
+        <></>
+      )}
+
+      <footer>
+        <hr className="footer__divider"></hr>
+      </footer>
     </div>
   );
 }

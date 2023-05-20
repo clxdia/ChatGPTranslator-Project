@@ -48,6 +48,10 @@ body {
   }
 
   .input {
+    &__mobile {
+      display: none;
+    }
+
     textarea {
       padding: 35px;
     }
@@ -124,6 +128,7 @@ body {
   gap: 25px;
   margin-top: 5px;
   background-color: $grey;
+  border-bottom: 1px solid $dark-gray;
   position: relative;
   margin-top: -100px;
   z-index: -1;
@@ -142,8 +147,8 @@ body {
     width: fit-content;
     width: 70%;
     margin: auto;
-    max-width: 1100px;
-    gap: 25px;
+    max-width: 1250px;
+    gap: 35px;
   }
 
   &__definitions,
@@ -197,7 +202,7 @@ body {
   }
 }
 
-// LANGUAGES
+// ----------------------- LANGUAGES
 
 .content__languages {
   opacity: 0;
@@ -209,4 +214,201 @@ body {
   opacity: 1;
   height: 160px !important;
   @include languages();
+}
+
+// ------------------------ HISTORY
+.content__history {
+  width: 70%;
+  max-width: 1290px;
+  margin: auto;
+  margin-top: 6vh;
+  padding-bottom: 10vh;
+  overflow: hidden;
+
+  &__title {
+    display: flex;
+    align-items: center;
+
+    h2 {
+      width: 50%;
+    }
+
+    div {
+      width: 50%;
+      display: flex;
+      justify-content: end;
+      gap: 30px;
+
+      svg {
+        color: rgb(201, 201, 201);
+      }
+    }
+  }
+
+  &__container {
+    display: flex;
+    gap: 20px;
+    overflow: hidden;
+    height: 20vh;
+    align-items: center;
+
+    .history {
+      width: 20vw;
+      min-width: 360px;
+      border-radius: 7px 7px 7px 7px;
+      box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.16),
+        0px 1px 2px rgba(0, 0, 0, 0.16), 0px 3px 2px rgba(0, 0, 0, 0.077);
+      height: 8vh;
+      padding: 35px 27px 35px 27px;
+
+      p {
+        margin: 6px;
+        &:nth-child(2) {
+          color: $dark-gray;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .content__history__container {
+    .history {
+      width: 15vw;
+      min-width: 300px;
+    }
+  }
+}
+
+@media screen and (max-width: 800px) {
+  p,
+  i,
+  b {
+    font-size: 14px !important;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px !important;
+    padding-top: 0px !important;
+    width: 90% !important;
+
+    .input,
+    .output {
+      width: 100%;
+
+      .button__desktop,
+      .language__selector {
+        display: none;
+      }
+    }
+
+    .input {
+      &__mobile {
+        display: block !important;
+        display: flex !important;
+        justify-content: space-around !important;
+      }
+
+      .language__selector__mobile {
+        display: flex;
+        align-items: center !important;
+        padding: 8px 20px 8px 20px !important;
+        gap: 5px;
+      }
+
+      &__icons {
+        padding: 8px !important;
+      }
+    }
+
+    .output {
+      padding-top: 0px !important;
+      textarea {
+        margin-top: 0px !important;
+      }
+      &__icons {
+        padding: 8px !important;
+      }
+    }
+
+    button,
+    select {
+      padding: 10px 20px 10px 20px !important;
+      margin: auto;
+      background-color: $blue;
+      color: white;
+      border-radius: 5px;
+      font-size: 12px;
+    }
+
+    textarea {
+      width: auto;
+      height: 15vw;
+      max-width: 530px;
+      max-height: 300px;
+      margin-top: 20px;
+      resize: none;
+      padding: 25px !important;
+      border-radius: 7px 7px 0px 0px;
+      box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.16);
+      font-size: 14px;
+    }
+  }
+
+  .content__below {
+    &__container {
+      display: flex;
+      flex-direction: column;
+      width: 90%;
+      margin: auto !important;
+      gap: 10px !important;
+      margin: 10px;
+    }
+
+    &__synonyms,
+    &__definitions {
+      width: 95%;
+    }
+
+    &__definitions {
+      margin-top: 0px;
+    }
+  }
+
+  .content__languages_open,
+  .content__languages {
+    width: 75%;
+
+    li {
+      display: flex;
+      gap: 10px;
+      width: 90%;
+      text-align: center;
+      justify-content: center;
+    }
+    button {
+      font-size: 14px;
+    }
+  }
+
+  h2 {
+    font-size: 18px !important;
+  }
+
+  .content__history {
+    width: 90%;
+
+    svg {
+      width: 20px;
+    }
+
+    &__container {
+      .history {
+        width: 13vw !important;
+        min-width: 250px;
+      }
+    }
+  }
 }
