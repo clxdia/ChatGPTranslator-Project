@@ -7,7 +7,7 @@ import {
 } from "react-icons/md";
 import { HiOutlineSwitchHorizontal } from "react-icons/hi";
 import { RiDeleteBin5Line } from "react-icons/ri";
-import { BsArrowReturnRight } from "react-icons/bs";
+import { BsArrowReturnRight, BsTranslate } from "react-icons/bs";
 import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 
 import "../src/styles/index.scss";
@@ -356,7 +356,25 @@ function App() {
       )}
 
       <footer>
-        <hr className="footer__divider"></hr>
+        <div className="footer">
+          <h3>
+            <BsTranslate /> Translator
+          </h3>
+          <ul>
+            <li>
+              <p>About</p>
+            </li>
+            <li>
+              <p>Community</p>
+            </li>
+            <li>
+              <p>Privacy & Terms</p>
+            </li>
+            <li>
+              <p>Help</p>
+            </li>
+          </ul>
+        </div>
       </footer>
     </div>
   );
